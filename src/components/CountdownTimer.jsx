@@ -1,17 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  AlarmClock,
-  Copy,
-  Link2,
-  Mail,
-  MessageCircle,
-  Pencil,
-  Play,
-  RotateCcw,
-  Share2,
-  Square,
-  Timer as TimerIcon,
-} from "lucide-react";
+import { Pencil, Play, RotateCcw, Square } from "lucide-react";
 
 import SectionCard from "./SectionCard.jsx";
 import TimerEditModal from "./TimerEditModal.jsx";
@@ -54,7 +42,6 @@ export default function CountdownTimer({ theme }) {
   const [showEditor, setShowEditor] = useState(false);
   const [timerSound, setTimerSound] = useState(DEFAULT_ALARM_SOUND);
   const [repeatSound, setRepeatSound] = useState(true);
-  const [copyStatus, setCopyStatus] = useState("");
 
   const deadlineRef = useRef(0);
   const totalDurationRef = useRef(0);
@@ -191,26 +178,9 @@ export default function CountdownTimer({ theme }) {
       : "border-neutral-200 bg-neutral-50 text-neutral-900"
   }`;
 
-  const shareUrl = window.location.href;
-  const shareText = "Set a countdown with Online Clock.";
-  const encodedUrl = encodeURIComponent(shareUrl);
-  const encodedText = encodeURIComponent(shareText);
-
-  const copyTimerLink = async () => {
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopyStatus("Link copied!");
-    } catch {
-      window.prompt("Copy this timer link:", shareUrl);
-    }
-  };
-
   return (
     <div className="space-y-5">
       <SectionCard
-        title="Countdown timer"
-        subtitle="Set a duration, then start the countdown."
-        icon={TimerIcon}
         theme={theme}
       >
         <div className="grid gap-8 py-2 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.8fr)] lg:items-center">
@@ -342,7 +312,7 @@ export default function CountdownTimer({ theme }) {
                   dark ? "text-neutral-300" : "text-neutral-700"
                 }`}
               >
-                Custom duration
+                Time
               </p>
 
               <div className="grid grid-cols-3 gap-3">
@@ -362,7 +332,7 @@ export default function CountdownTimer({ theme }) {
                     className={`${inputClass} disabled:opacity-50`}
                   />
                   <span className="mt-2 block text-center text-xs text-neutral-500">
-                    Hours
+                    H
                   </span>
                 </label>
 
@@ -382,7 +352,7 @@ export default function CountdownTimer({ theme }) {
                     className={`${inputClass} disabled:opacity-50`}
                   />
                   <span className="mt-2 block text-center text-xs text-neutral-500">
-                    Minutes
+                    M
                   </span>
                 </label>
 
@@ -402,7 +372,7 @@ export default function CountdownTimer({ theme }) {
                     className={`${inputClass} disabled:opacity-50`}
                   />
                   <span className="mt-2 block text-center text-xs text-neutral-500">
-                    Seconds
+                    S
                   </span>
                 </label>
               </div>
@@ -414,7 +384,7 @@ export default function CountdownTimer({ theme }) {
                   dark ? "text-neutral-300" : "text-neutral-700"
                 }`}
               >
-                Quick presets
+                Presets
               </p>
 
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -436,136 +406,9 @@ export default function CountdownTimer({ theme }) {
               </div>
             </div>
 
-            <div
-              className={`flex items-start gap-2 rounded-xl p-3 text-xs leading-5 ${
-                dark
-                  ? "bg-neutral-900 text-neutral-500"
-                  : "bg-neutral-50 text-neutral-500"
-              }`}
-            >
-              <AlarmClock
-                className="mt-0.5 shrink-0 text-amber-500"
-                size={15}
-              />
-              The sound plays in this page. Keep the tab open and your device
-              awake while the timer runs.
-            </div>
           </div>
         </div>
       </SectionCard>
-
-      <section className="grid gap-5 xl:grid-cols-2">
-        <article
-          className={`rounded-2xl border p-5 sm:p-7 ${
-            dark
-              ? "border-neutral-800 bg-neutral-950/90"
-              : "border-neutral-200 bg-white"
-          }`}
-        >
-          <h2 className="text-xl font-semibold tracking-tight">
-            How to use the timer
-          </h2>
-          <div className={`my-4 h-px ${dark ? "bg-neutral-800" : "bg-neutral-200"}`} />
-          <ol
-            className={`space-y-3 text-sm leading-6 ${
-              dark ? "text-neutral-400" : "text-neutral-600"
-            }`}
-          >
-            <li>
-              <strong className={dark ? "text-neutral-200" : "text-neutral-800"}>1. Set a duration.</strong> Enter hours, minutes, and seconds, choose a quick preset, or select Edit timer.
-            </li>
-            <li>
-              <strong className={dark ? "text-neutral-200" : "text-neutral-800"}>2. Choose your sound.</strong> In Edit timer, select the alert sound you want to hear when time reaches zero.
-            </li>
-            <li>
-              <strong className={dark ? "text-neutral-200" : "text-neutral-800"}>3. Start the countdown.</strong> Select Start. Stop pauses at the current remaining time, and Start resumes it.
-            </li>
-            <li>
-              <strong className={dark ? "text-neutral-200" : "text-neutral-800"}>4. Reset or dismiss.</strong> Reset returns to the full duration. When the timer finishes, select Dismiss alarm to stop the alert.
-            </li>
-          </ol>
-          <p className={`mt-5 text-xs leading-5 ${dark ? "text-neutral-500" : "text-neutral-500"}`}>
-            Keep this page open and allow sound in your browser so the timer can alert you reliably.
-          </p>
-        </article>
-
-        <article
-          className={`rounded-2xl border p-5 sm:p-7 ${
-            dark
-              ? "border-neutral-800 bg-neutral-950/90"
-              : "border-neutral-200 bg-white"
-          }`}
-        >
-          <div className="flex items-center gap-2">
-            <Share2 size={20} className="text-amber-500" />
-            <h2 className="text-xl font-semibold tracking-tight">Share this timer</h2>
-          </div>
-          <p className={`mt-2 text-sm leading-6 ${dark ? "text-neutral-400" : "text-neutral-600"}`}>
-            Send this timer page to friends or save its link for later.
-          </p>
-          <div className={`mt-5 flex items-center gap-2 rounded-xl border p-2 ${dark ? "border-neutral-800 bg-neutral-900/60" : "border-neutral-200 bg-neutral-50"}`}>
-            <Link2 size={16} className="ml-1 shrink-0 text-neutral-500" />
-            <span className="min-w-0 flex-1 truncate text-xs text-neutral-500">
-              {shareUrl}
-            </span>
-            <button
-              type="button"
-              onClick={copyTimerLink}
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-amber-500 px-3 py-2 text-xs font-semibold text-neutral-950 transition hover:bg-amber-400"
-            >
-              <Copy size={14} />
-              Copy
-            </button>
-          </div>
-          {copyStatus && <p role="status" className="mt-2 text-xs text-emerald-500">{copyStatus}</p>}
-          <div className="mt-4 flex flex-wrap gap-2">
-            <a
-              href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-lg bg-[#1877f2] px-3 py-2 text-xs font-semibold text-white transition hover:brightness-110"
-            >
-              Facebook
-            </a>
-            <a
-              href={`https://x.com/intent/post?url=${encodedUrl}&text=${encodedText}`}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-lg bg-neutral-900 px-3 py-2 text-xs font-semibold text-white transition hover:bg-neutral-700"
-            >
-              X
-            </a>
-            <a
-              href={`https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-emerald-500"
-            >
-              <MessageCircle size={14} />
-              WhatsApp
-            </a>
-            <a
-              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-lg bg-[#0a66c2] px-3 py-2 text-xs font-semibold text-white transition hover:brightness-110"
-            >
-              LinkedIn
-            </a>
-            <a
-              href={`mailto:?subject=${encodeURIComponent("Online Clock timer")}&body=${encodeURIComponent(`${shareText}\n\n${shareUrl}`)}`}
-              className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold transition ${
-                dark
-                  ? "border-neutral-700 text-neutral-300 hover:bg-neutral-900"
-                  : "border-neutral-200 text-neutral-600 hover:bg-neutral-100"
-              }`}
-            >
-              <Mail size={14} />
-              Email
-            </a>
-          </div>
-        </article>
-      </section>
 
       {showEditor && (
         <TimerEditModal

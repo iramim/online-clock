@@ -1,6 +1,11 @@
 import { AlarmClock, Moon, Settings, Sun } from "lucide-react";
 
-export default function AppHeader({ theme, onToggleTheme, onOpenSettings }) {
+export default function AppHeader({
+  theme,
+  onToggleTheme,
+  onOpenSettings,
+  compact = false,
+}) {
   const dark = theme === "dark";
 
   return (
@@ -21,38 +26,48 @@ export default function AppHeader({ theme, onToggleTheme, onOpenSettings }) {
             <AlarmClock size={23} strokeWidth={2.3} />
           </span>
 
-          <span className="leading-tight">
-            <span className="block text-xl font-semibold tracking-tight sm:text-2xl">
-              online<span className="text-amber-500">-clock</span>
+          {compact ? (
+            <span className="text-lg font-semibold tracking-tight sm:text-xl">
+              Online<span className="text-amber-500">-clock</span>
             </span>
+          ) : (
+            <span className="leading-tight">
+              <span className="block text-xl font-semibold tracking-tight sm:text-2xl">
+                online<span className="text-amber-500">-clock</span>
+              </span>
 
-            <span
-              className={`hidden text-[10px] font-medium uppercase tracking-[0.24em] sm:block ${
-                dark ? "text-neutral-500" : "text-neutral-400"
-              }`}
-            >
-              Time tools made simple
+              <span
+                className={`hidden text-[10px] font-medium uppercase tracking-[0.24em] sm:block ${
+                  dark ? "text-neutral-500" : "text-neutral-400"
+                }`}
+              >
+                Time tools made simple
+              </span>
             </span>
-          </span>
+          )}
         </a>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <a
-            href="https://online-clock.com"
-            className={`hidden text-sm transition md:inline ${
-              dark
-                ? "text-neutral-400 hover:text-white"
-                : "text-neutral-500 hover:text-neutral-900"
-            }`}
-          >
-            online-clock.com
-          </a>
+          {!compact && (
+            <>
+              <a
+                href="https://online-clock.com"
+                className={`hidden text-sm transition md:inline ${
+                  dark
+                    ? "text-neutral-400 hover:text-white"
+                    : "text-neutral-500 hover:text-neutral-900"
+                }`}
+              >
+                online-clock.com
+              </a>
 
-          <span
-            className={`hidden h-7 w-px sm:block ${
-              dark ? "bg-neutral-800" : "bg-neutral-200"
-            }`}
-          />
+              <span
+                className={`hidden h-7 w-px sm:block ${
+                  dark ? "bg-neutral-800" : "bg-neutral-200"
+                }`}
+              />
+            </>
+          )}
 
           <button
             type="button"

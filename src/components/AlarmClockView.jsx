@@ -44,8 +44,7 @@ export default function AlarmClockView({
 
       <div className="grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
         <SectionCard
-          title="Quick set"
-          subtitle="Add a frequently used alarm time"
+          title="Quick"
           icon={Zap}
           theme={theme}
           action={
@@ -87,19 +86,19 @@ export default function AlarmClockView({
           <button
             type="button"
             onClick={() => setShowAllQuickTimes((shown) => !shown)}
-            className={`mt-3 text-xs font-semibold ${
+            aria-expanded={showAllQuickTimes}
+            className={`mt-3 inline-flex min-w-12 items-center justify-center rounded-md px-2 py-1.5 text-xs font-semibold outline-none transition focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 ${
               dark
-                ? "text-amber-400 hover:text-amber-300"
-                : "text-amber-700 hover:text-amber-600"
+                ? "text-amber-400 hover:bg-neutral-900 hover:text-amber-300 focus-visible:ring-offset-neutral-950"
+                : "text-amber-700 hover:bg-amber-50 hover:text-amber-600 focus-visible:ring-offset-white"
             }`}
           >
-            {showAllQuickTimes ? "Show fewer times" : "Show all quick times"}
+            {showAllQuickTimes ? "Less" : "More"}
           </button>
         </SectionCard>
 
         <SectionCard
-          title="Your alarms"
-          subtitle={`${alarms.length} saved alarm${alarms.length === 1 ? "" : "s"}`}
+          title="Alarms"
           icon={AlarmClock}
           theme={theme}
           action={
@@ -109,9 +108,7 @@ export default function AlarmClockView({
                   ? "bg-neutral-900 text-neutral-400"
                   : "bg-neutral-100 text-neutral-500"
               }`}
-            >
-              Local
-            </span>
+            >{alarms.length}</span>
           }
         >
           <AlarmList

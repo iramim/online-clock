@@ -15,6 +15,7 @@ import AlarmFormModal from "./components/AlarmFormModal.jsx";
 import CountdownTimer from "./components/CountdownTimer.jsx";
 import Stopwatch from "./components/Stopwatch.jsx";
 import WorldClock from "./components/WorldClock.jsx";
+import DigitalClockPage from "./components/DigitalClockPage.jsx";
 import SettingsModal from "./components/SettingsModal.jsx";
 import RingingAlarmModal from "./components/RingingAlarmModal.jsx";
 import { useAlarms } from "./hooks/useAlarms.js";
@@ -23,6 +24,12 @@ import { useNow } from "./hooks/useNow.js";
 import { unlockAudio } from "./lib/sound.js";
 
 const VIEW_META = {
+  digital: {
+    eyebrow: "LOCAL TIME, CLEARLY DISPLAYED",
+    title: "Digital clock",
+    description: "A focused local-time display with the look that suits your space.",
+    icon: Clock3,
+  },
   alarm: {
     eyebrow: "YOUR DAILY ROUTINE",
     title: "Alarm clock",
@@ -69,6 +76,9 @@ export default function App() {
   const [showAlarmForm, setShowAlarmForm] = useState(false);
   const [initialAlarmTime, setInitialAlarmTime] = useState(undefined);
   const [showSettings, setShowSettings] = useState(false);
+  const [showDigitalSettings, setShowDigitalSettings] = useState(
+    () => window.matchMedia("(min-width: 1024px)").matches,
+  );
 
   const [notificationState, setNotificationState] = useState(() =>
     "Notification" in window ? Notification.permission : "unsupported",
@@ -84,6 +94,9 @@ export default function App() {
   } = useAlarms();
 
   const dark = theme === "dark";
+  const minimalView = ["digital", "alarm", "timer", "stopwatch", "world"].includes(
+    activeView,
+  );
   const meta = VIEW_META[activeView];
   const CurrentIcon = meta.icon;
 
@@ -139,8 +152,13 @@ export default function App() {
     >
       <AppHeader
         theme={theme}
+        compact={minimalView}
         onToggleTheme={() => setTheme(dark ? "light" : "dark")}
-        onOpenSettings={() => setShowSettings(true)}
+        onOpenSettings={() =>
+          activeView === "digital"
+            ? setShowDigitalSettings((open) => !open)
+            : setShowSettings(true)
+        }
       />
 
       <div className="mx-auto flex min-h-[calc(100vh-76px)] max-w-[1800px]">
@@ -148,11 +166,12 @@ export default function App() {
           activeView={activeView}
           onChange={setActiveView}
           theme={theme}
+          compact={minimalView}
         />
 
-        <main className="min-w-0 flex-1 px-4 pb-24 pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pb-10">
-          <div className="mx-auto max-w-315">
-            <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <main className={activeView === "digital" ? "min-w-0 flex-1 px-3 pb-24 pt-3 sm:px-4 lg:px-5 lg:pb-5" : "min-w-0 flex-1 px-4 pb-24 pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pb-10"}>
+          <div className={activeView === "digital" ? "mx-auto max-w-none" : "mx-auto max-w-315"}>
+            {!minimalView && <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
               <div>
                 {meta.eyebrow && (
                   <p className="mb-2 text-[10px] font-bold tracking-[0.24em] text-amber-500">
@@ -195,7 +214,7 @@ export default function App() {
                   hour12: true,
                 })}
               </div>
-            </div>
+            </div>}
 
             <div className={activeView === "alarm" ? "block" : "hidden"}>
               <AlarmClockView
@@ -211,6 +230,15 @@ export default function App() {
               />
             </div>
 
+            <div className={activeView === "digital" ? "block" : "hidden"}>
+              <DigitalClockPage
+                now={now}
+                theme={theme}
+                settingsOpen={showDigitalSettings}
+                onSettingsOpenChange={setShowDigitalSettings}
+              />
+            </div>
+
             <div className={activeView === "timer" ? "block" : "hidden"}>
               <CountdownTimer theme={theme} />
             </div>
@@ -223,60 +251,7 @@ export default function App() {
               <WorldClock now={now} theme={theme} use24Hour={use24Hour} />
             </div>
 
-            {activeView === "alarm" && (
-              <section
-                className={`mt-8 rounded-2xl border p-5 sm:p-7 ${
-                  dark
-                    ? "border-neutral-800 bg-neutral-900/50"
-                    : "border-neutral-200 bg-white"
-                }`}
-                aria-labelledby="how-to-use-alarm"
-              >
-                <h2
-                  id="how-to-use-alarm"
-                  className="text-xl font-semibold tracking-tight"
-                >
-                  How to use this online alarm clock
-                </h2>
-
-                <div
-                  className={`my-4 h-px ${
-                    dark ? "bg-neutral-800" : "bg-neutral-200"
-                  }`}
-                />
-
-                <div
-                  className={`space-y-4 text-sm leading-7 ${
-                    dark ? "text-neutral-400" : "text-neutral-600"
-                  }`}
-                >
-                  <p>
-                    Choose{" "}
-                    <strong
-                      className={dark ? "text-neutral-200" : "text-neutral-800"}
-                    >
-                      Set Alarm
-                    </strong>
-                    , then select the hour, minute, optional label, repeat days,
-                    and alarm sound. Save the alarm when you are ready.
-                  </p>
-
-                  <p>
-                    Select a sound in the alarm form to hear it once before
-                    saving. When the alarm rings, it can keep playing until you
-                    dismiss it.
-                  </p>
-
-                  <p>
-                    Keep this page open and your device awake. Browser alarms
-                    cannot ring after the tab or browser has been closed, so
-                    make sure sound is allowed for reliable alerts.
-                  </p>
-                </div>
-              </section>
-            )}
-
-            <footer
+            {!minimalView && <footer
               className={`mt-8 flex flex-col gap-3 border-t pt-5 text-xs sm:flex-row sm:items-center sm:justify-between ${
                 dark
                   ? "border-neutral-900 text-neutral-600"
@@ -309,7 +284,7 @@ export default function App() {
                   Website <ArrowUpRight size={12} />
                 </a>
               </div>
-            </footer>
+            </footer>}
           </div>
         </main>
       </div>

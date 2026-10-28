@@ -1,7 +1,13 @@
-import { AlarmClock, Globe2, Timer, Watch } from "lucide-react";
+import { AlarmClock, Clock3, Globe2, Timer, Watch } from "lucide-react";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const VIEWS = [
+  {
+    id: "digital",
+    label: "Digital Clock",
+    icon: Clock3,
+    hint: "See local time",
+  },
   {
     id: "alarm",
     label: "Alarm Clock",
@@ -28,7 +34,7 @@ export const VIEWS = [
   },
 ];
 
-export default function AppSidebar({ activeView, onChange, theme }) {
+export default function AppSidebar({ activeView, onChange, theme, compact = false }) {
   const dark = theme === "dark";
 
   const navButton = (view) => {
@@ -41,7 +47,11 @@ export default function AppSidebar({ activeView, onChange, theme }) {
         type="button"
         onClick={() => onChange(view.id)}
         aria-current={active ? "page" : undefined}
-        className={`group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition ${
+        aria-label={compact ? view.label : undefined}
+        title={compact ? view.label : undefined}
+        className={`group flex w-full items-center rounded-xl px-3 py-3 text-left transition ${
+          compact ? "flex-col justify-center gap-1.5 py-4 text-center" : "gap-3"
+        } ${
           active
             ? "bg-amber-500 text-neutral-950"
             : dark
@@ -51,11 +61,11 @@ export default function AppSidebar({ activeView, onChange, theme }) {
       >
         <Icon size={21} strokeWidth={active ? 2.4 : 1.8} />
 
-        <span className="min-w-0 flex-1">
-          <span className="block text-sm font-semibold">{view.label}</span>
+        <span className={compact ? "min-w-0" : "min-w-0 flex-1"}>
+          <span className={compact ? "block text-xs font-semibold" : "block text-sm font-semibold"}>{view.label}</span>
 
           <span
-            className={`mt-0.5 hidden text-[11px] md:block ${
+            className={`${compact ? "hidden" : "mt-0.5 hidden text-[11px] md:block"} ${
               active
                 ? "text-neutral-900/70"
                 : dark
@@ -73,23 +83,27 @@ export default function AppSidebar({ activeView, onChange, theme }) {
   return (
     <>
       <aside
-        className={`hidden w-59.5 shrink-0 border-r p-4 lg:block ${
+        className={`hidden shrink-0 border-r p-4 lg:block ${
+          compact ? "w-36" : "w-59.5"
+        } ${
           dark
             ? "border-neutral-800 bg-neutral-950"
             : "border-neutral-200 bg-white"
         }`}
       >
-        <p
-          className={`mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.22em] ${
-            dark ? "text-neutral-600" : "text-neutral-400"
-          }`}
-        >
-          Tools
-        </p>
+        {!compact && (
+          <p
+            className={`mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.22em] ${
+              dark ? "text-neutral-600" : "text-neutral-400"
+            }`}
+          >
+            Tools
+          </p>
+        )}
 
         <nav className="space-y-2">{VIEWS.map(navButton)}</nav>
 
-        <div
+        {!compact && <div
           className={`mt-8 rounded-xl border p-3 ${
             dark
               ? "border-neutral-800 bg-neutral-900/60"
@@ -106,12 +120,12 @@ export default function AppSidebar({ activeView, onChange, theme }) {
             Keep this page open and your device awake for browser alarms to work
             reliably.
           </p>
-        </div>
+        </div>}
       </aside>
 
       <nav
         aria-label="Main tools"
-        className={`fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t px-2 py-2 lg:hidden ${
+        className={`fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t px-2 py-2 lg:hidden ${
           dark
             ? "border-neutral-800 bg-neutral-950/95 backdrop-blur"
             : "border-neutral-200 bg-white/95 backdrop-blur"
@@ -126,12 +140,13 @@ export default function AppSidebar({ activeView, onChange, theme }) {
               key={view.id}
               type="button"
               onClick={() => onChange(view.id)}
+              aria-label={compact ? view.label : undefined}
               className={`flex flex-col items-center gap-1 rounded-lg py-2 text-[10px] font-medium ${
                 active ? "text-amber-500" : "text-neutral-500"
               }`}
             >
               <Icon size={20} />
-              <span>{view.label}</span>
+              <span className={compact ? "sr-only" : ""}>{view.label}</span>
             </button>
           );
         })}

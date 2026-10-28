@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Flag, Pause, Play, RotateCcw, Watch } from "lucide-react";
+import { Flag, Pause, Play, RotateCcw } from "lucide-react";
 
 import SectionCard from "./SectionCard.jsx";
 import { formatDuration } from "../lib/format.js";
@@ -157,9 +157,8 @@ export default function Stopwatch({ theme }) {
         </div>
       </SectionCard>
 
-      <SectionCard
+      {laps.length > 0 && <SectionCard
         title="Lap history"
-        subtitle={`${laps.length} lap${laps.length === 1 ? "" : "s"} recorded`}
         icon={Flag}
         theme={theme}
         action={
@@ -178,18 +177,7 @@ export default function Stopwatch({ theme }) {
           ) : null
         }
       >
-        {!laps.length ? (
-          <div
-            className={`rounded-xl border border-dashed px-4 py-8 text-center text-sm ${
-              dark
-                ? "border-neutral-800 text-neutral-600"
-                : "border-neutral-200 text-neutral-500"
-            }`}
-          >
-            Lap times will appear here when you record them.
-          </div>
-        ) : (
-          <div className="overflow-hidden rounded-xl border border-neutral-800/70">
+        <div className="overflow-hidden rounded-xl border border-neutral-800/70">
             <div
               className={`grid grid-cols-3 px-4 py-3 text-[10px] font-bold uppercase tracking-wider ${
                 dark
@@ -222,9 +210,8 @@ export default function Stopwatch({ theme }) {
                 </span>
               </div>
             ))}
-          </div>
-        )}
-      </SectionCard>
+        </div>
+      </SectionCard>}
     </div>
   );
 }
