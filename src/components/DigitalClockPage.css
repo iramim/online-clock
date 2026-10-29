@@ -253,6 +253,17 @@
     display: none;
   }
 
+  /*
+   * The regular side panel is intentionally hidden on small screens, but the
+   * same base class is also used by the settings drawer.  Keep the drawer
+   * visible so opening Settings does not leave the user with only a backdrop.
+   */
+  .digital-page__settings--drawer {
+    display: block;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .digital-page__stage {
     min-height: min(66vh, 38rem);
   }
