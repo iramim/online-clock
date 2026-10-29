@@ -3,6 +3,12 @@ import { AlarmClock, Clock3, Globe2, Timer, Watch } from "lucide-react";
 // eslint-disable-next-line react-refresh/only-export-components
 export const VIEWS = [
   {
+    id: "flip",
+    label: "Flip Clock",
+    icon: Clock3,
+    hint: "Classic split-flap time",
+  },
+  {
     id: "digital",
     label: "Digital Clock",
     icon: Clock3,
@@ -34,7 +40,12 @@ export const VIEWS = [
   },
 ];
 
-export default function AppSidebar({ activeView, onChange, theme, compact = false }) {
+export default function AppSidebar({
+  activeView,
+  onChange,
+  theme,
+  compact = false,
+}) {
   const dark = theme === "dark";
 
   const navButton = (view) => {
@@ -62,7 +73,15 @@ export default function AppSidebar({ activeView, onChange, theme, compact = fals
         <Icon size={21} strokeWidth={active ? 2.4 : 1.8} />
 
         <span className={compact ? "min-w-0" : "min-w-0 flex-1"}>
-          <span className={compact ? "block text-xs font-semibold" : "block text-sm font-semibold"}>{view.label}</span>
+          <span
+            className={
+              compact
+                ? "block text-xs font-semibold"
+                : "block text-sm font-semibold"
+            }
+          >
+            {view.label}
+          </span>
 
           <span
             className={`${compact ? "hidden" : "mt-0.5 hidden text-[11px] md:block"} ${
@@ -103,29 +122,31 @@ export default function AppSidebar({ activeView, onChange, theme, compact = fals
 
         <nav className="space-y-2">{VIEWS.map(navButton)}</nav>
 
-        {!compact && <div
-          className={`mt-8 rounded-xl border p-3 ${
-            dark
-              ? "border-neutral-800 bg-neutral-900/60"
-              : "border-neutral-200 bg-neutral-50"
-          }`}
-        >
-          <p className="text-xs font-semibold">A small reminder</p>
-
-          <p
-            className={`mt-1.5 text-xs leading-5 ${
-              dark ? "text-neutral-500" : "text-neutral-500"
+        {!compact && (
+          <div
+            className={`mt-8 rounded-xl border p-3 ${
+              dark
+                ? "border-neutral-800 bg-neutral-900/60"
+                : "border-neutral-200 bg-neutral-50"
             }`}
           >
-            Keep this page open and your device awake for browser alarms to work
-            reliably.
-          </p>
-        </div>}
+            <p className="text-xs font-semibold">A small reminder</p>
+
+            <p
+              className={`mt-1.5 text-xs leading-5 ${
+                dark ? "text-neutral-500" : "text-neutral-500"
+              }`}
+            >
+              Keep this page open and your device awake for browser alarms to
+              work reliably.
+            </p>
+          </div>
+        )}
       </aside>
 
       <nav
         aria-label="Main tools"
-        className={`fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t px-2 py-2 lg:hidden ${
+        className={`fixed inset-x-0 bottom-0 z-30 grid grid-cols-3 border-t px-2 py-2 sm:grid-cols-6 lg:hidden ${
           dark
             ? "border-neutral-800 bg-neutral-950/95 backdrop-blur"
             : "border-neutral-200 bg-white/95 backdrop-blur"

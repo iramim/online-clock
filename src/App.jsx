@@ -16,6 +16,7 @@ import CountdownTimer from "./components/CountdownTimer.jsx";
 import Stopwatch from "./components/Stopwatch.jsx";
 import WorldClock from "./components/WorldClock.jsx";
 import DigitalClockPage from "./components/DigitalClockPage.jsx";
+import FlipClockPage from "./components/FlipClockPage.jsx";
 import SettingsModal from "./components/SettingsModal.jsx";
 import RingingAlarmModal from "./components/RingingAlarmModal.jsx";
 import { useAlarms } from "./hooks/useAlarms.js";
@@ -28,6 +29,12 @@ const VIEW_META = {
     eyebrow: "LOCAL TIME, CLEARLY DISPLAYED",
     title: "Digital clock",
     description: "A focused local-time display with the look that suits your space.",
+    icon: Clock3,
+  },
+  flip: {
+    eyebrow: "LOCAL TIME, FLIPPED",
+    title: "Flip clock",
+    description: "A classic split-flap clock display for your screen.",
     icon: Clock3,
   },
   alarm: {
@@ -72,11 +79,16 @@ export default function App() {
   const clockSettings = { ...DEFAULT_CLOCK_SETTINGS, ...storedClockSettings };
   const use24Hour = !clockSettings.use12Hour;
 
-  const [activeView, setActiveView] = useState("alarm");
+  const [activeView, setActiveView] = useState(() =>
+    window.location.pathname === "/flip-clock" ? "flip" : "alarm",
+  );
   const [showAlarmForm, setShowAlarmForm] = useState(false);
   const [initialAlarmTime, setInitialAlarmTime] = useState(undefined);
   const [showSettings, setShowSettings] = useState(false);
   const [showDigitalSettings, setShowDigitalSettings] = useState(
+    () => window.matchMedia("(min-width: 1024px)").matches,
+  );
+  const [showFlipSettings, setShowFlipSettings] = useState(
     () => window.matchMedia("(min-width: 1024px)").matches,
   );
 
@@ -94,7 +106,7 @@ export default function App() {
   } = useAlarms();
 
   const dark = theme === "dark";
-  const minimalView = ["digital", "alarm", "timer", "stopwatch", "world"].includes(
+  const minimalView = ["digital", "flip", "alarm", "timer", "stopwatch", "world"].includes(
     activeView,
   );
   const meta = VIEW_META[activeView];
@@ -108,6 +120,23 @@ export default function App() {
         ? "Online Clock — Alarm Clock, Timer, Stopwatch & World Clock"
         : `${meta.title} — Online Clock`;
   }, [dark, activeView, meta.title]);
+
+  useEffect(() => {
+    const syncViewWithLocation = () => {
+      setActiveView(window.location.pathname === "/flip-clock" ? "flip" : "alarm");
+    };
+
+    window.addEventListener("popstate", syncViewWithLocation);
+    return () => window.removeEventListener("popstate", syncViewWithLocation);
+  }, []);
+
+  const handleViewChange = (view) => {
+    setActiveView(view);
+    const path = view === "flip" ? "/flip-clock" : "/";
+    if (window.location.pathname !== path) {
+      window.history.pushState({}, "", path);
+    }
+  };
 
   const openAlarmForm = (time) => {
     setInitialAlarmTime(time);
@@ -157,6 +186,8 @@ export default function App() {
         onOpenSettings={() =>
           activeView === "digital"
             ? setShowDigitalSettings((open) => !open)
+            : activeView === "flip"
+              ? setShowFlipSettings((open) => !open)
             : setShowSettings(true)
         }
       />
@@ -164,13 +195,13 @@ export default function App() {
       <div className="mx-auto flex min-h-[calc(100vh-76px)] max-w-[1800px]">
         <AppSidebar
           activeView={activeView}
-          onChange={setActiveView}
+          onChange={handleViewChange}
           theme={theme}
           compact={minimalView}
         />
 
-        <main className={activeView === "digital" ? "min-w-0 flex-1 px-3 pb-24 pt-3 sm:px-4 lg:px-5 lg:pb-5" : "min-w-0 flex-1 px-4 pb-24 pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pb-10"}>
-          <div className={activeView === "digital" ? "mx-auto max-w-none" : "mx-auto max-w-315"}>
+        <main className={activeView === "digital" || activeView === "flip" ? "min-w-0 flex-1 px-3 pb-24 pt-3 sm:px-4 lg:px-5 lg:pb-5" : "min-w-0 flex-1 px-4 pb-24 pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pb-10"}>
+          <div className={activeView === "digital" || activeView === "flip" ? "mx-auto max-w-none" : "mx-auto max-w-315"}>
             {!minimalView && <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
               <div>
                 {meta.eyebrow && (
@@ -239,6 +270,14 @@ export default function App() {
               />
             </div>
 
+            <div className={activeView === "flip" ? "block" : "hidden"}>
+              <FlipClockPage
+                now={now}
+                settingsOpen={showFlipSettings}
+                onSettingsOpenChange={setShowFlipSettings}
+              />
+            </div>
+
             <div className={activeView === "timer" ? "block" : "hidden"}>
               <CountdownTimer theme={theme} />
             </div>
@@ -270,7 +309,7 @@ export default function App() {
                   <button
                     key={view.id}
                     type="button"
-                    onClick={() => setActiveView(view.id)}
+                    onClick={() => handleViewChange(view.id)}
                     className="transition hover:text-amber-500"
                   >
                     {view.label}
