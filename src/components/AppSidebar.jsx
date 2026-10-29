@@ -3,6 +3,12 @@ import { AlarmClock, Clock3, Globe2, PanelsTopLeft, Timer, Watch } from "lucide-
 // eslint-disable-next-line react-refresh/only-export-components
 export const VIEWS = [
   {
+    id: "alarm",
+    label: "Alarm Clock",
+    icon: AlarmClock,
+    hint: "Wake up on time",
+  },
+  {
     id: "flip",
     label: "Flip Clock",
     icon: PanelsTopLeft,
@@ -13,12 +19,6 @@ export const VIEWS = [
     label: "Digital Clock",
     icon: Clock3,
     hint: "See local time",
-  },
-  {
-    id: "alarm",
-    label: "Alarm Clock",
-    icon: AlarmClock,
-    hint: "Wake up on time",
   },
   {
     id: "timer",

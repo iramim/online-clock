@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { flushSync } from "react-dom";
 import {
   AlarmClock,
   ArrowUpRight,
@@ -131,10 +132,20 @@ export default function App() {
   }, []);
 
   const handleViewChange = (view) => {
-    setActiveView(view);
-    const path = view === "flip" ? "/flip-clock" : "/";
-    if (window.location.pathname !== path) {
-      window.history.pushState({}, "", path);
+    if (view === activeView) return;
+
+    const updateView = () => {
+      setActiveView(view);
+      const path = view === "flip" ? "/flip-clock" : "/";
+      if (window.location.pathname !== path) {
+        window.history.pushState({}, "", path);
+      }
+    };
+
+    if (document.startViewTransition) {
+      document.startViewTransition(() => flushSync(updateView));
+    } else {
+      updateView();
     }
   };
 
@@ -183,6 +194,7 @@ export default function App() {
         theme={theme}
         compact={minimalView}
         onToggleTheme={() => setTheme(dark ? "light" : "dark")}
+        onHome={() => handleViewChange("alarm")}
         onOpenSettings={() =>
           activeView === "digital"
             ? setShowDigitalSettings((open) => !open)
@@ -200,7 +212,7 @@ export default function App() {
           compact={minimalView}
         />
 
-        <main className={activeView === "digital" || activeView === "flip" ? "min-w-0 flex-1 px-3 pb-24 pt-3 sm:px-4 lg:px-5 lg:pb-5" : "min-w-0 flex-1 px-4 pb-24 pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pb-10"}>
+        <main className={`app-view-content ${activeView === "digital" || activeView === "flip" ? "min-w-0 flex-1 px-3 pb-24 pt-3 sm:px-4 lg:px-5 lg:pb-5" : "min-w-0 flex-1 px-4 pb-24 pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pb-10"}`}>
           <div className={activeView === "digital" || activeView === "flip" ? "mx-auto max-w-none" : "mx-auto max-w-315"}>
             {!minimalView && <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
               <div>

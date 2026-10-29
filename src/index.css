@@ -51,6 +51,33 @@ button:disabled {
     background: rgba(245, 158, 11, 0.35);
 }
 
+/* Animate only the tool area when changing clocks or utilities. */
+.app-view-content {
+    view-transition-name: app-view-content;
+}
+
+::view-transition-old(app-view-content) {
+    animation: app-view-leave 150ms ease-in both;
+}
+
+::view-transition-new(app-view-content) {
+    animation: app-view-enter 260ms ease-out both;
+}
+
+@keyframes app-view-leave {
+    to {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+}
+
+@keyframes app-view-enter {
+    from {
+        opacity: 0;
+        transform: translateY(9px);
+    }
+}
+
 .clock-digit {
     font-family: "DSEG7 Classic", "Digital-7", monospace;
     font-variant-numeric: tabular-nums;
@@ -78,6 +105,11 @@ button:disabled {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
+    ::view-transition-old(app-view-content),
+    ::view-transition-new(app-view-content) {
+        animation: none;
+    }
 
     *,
     *::before,

@@ -4,6 +4,7 @@ export default function AppHeader({
   theme,
   onToggleTheme,
   onOpenSettings,
+  onHome,
   compact = false,
 }) {
   const dark = theme === "dark";
@@ -18,7 +19,13 @@ export default function AppHeader({
     >
       <div className="mx-auto flex h-19 max-w-[1800px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <a
-          href="#home"
+          href="/"
+          onClick={(event) => {
+            if (onHome) {
+              event.preventDefault();
+              onHome();
+            }
+          }}
           className="flex items-center gap-3"
           aria-label="Online Clock home"
         >
