@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import {
   AlarmClock,
@@ -71,6 +71,7 @@ const DEFAULT_CLOCK_SETTINGS = {
 
 export default function App() {
   const now = useNow(1000);
+  const analyticsInitialized = useRef(false);
 
   const [theme, setTheme] = useLocalStorage("online-clock-theme-v1", "dark");
   const [storedClockSettings, setStoredClockSettings] = useLocalStorage(
@@ -121,6 +122,19 @@ export default function App() {
         ? "Online Clock — Alarm Clock, Timer, Stopwatch & World Clock"
         : `${meta.title} — Online Clock`;
   }, [dark, activeView, meta.title]);
+
+  useEffect(() => {
+    if (!analyticsInitialized.current) {
+      analyticsInitialized.current = true;
+      return;
+    }
+
+    window.gtag?.("event", "page_view", {
+      page_location: window.location.href,
+      page_path: window.location.pathname,
+      page_title: document.title,
+    });
+  }, [activeView]);
 
   useEffect(() => {
     const syncViewWithLocation = () => {
