@@ -1,11 +1,11 @@
-import { AlarmClock, Clock3, Globe2, Timer, Watch } from "lucide-react";
+import { AlarmClock, Clock3, Globe2, PanelsTopLeft, Timer, Watch } from "lucide-react";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const VIEWS = [
   {
     id: "flip",
     label: "Flip Clock",
-    icon: Clock3,
+    icon: PanelsTopLeft,
     hint: "Classic split-flap time",
   },
   {

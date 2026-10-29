@@ -428,16 +428,6 @@ export default function FlipClockPage({ settingsOpen, onSettingsOpenChange }) {
 
   return (
     <section className="flip-clock" style={pageStyle}>
-      <div className="flip-clock__mobile-actions lg:hidden">
-        <button
-          type="button"
-          onClick={() => onSettingsOpenChange(true)}
-          aria-label="Open flip clock settings"
-        >
-          <Settings2 size={18} />
-        </button>
-      </div>
-
       <div
         className={`flip-clock__layout ${settingsOpen ? "flip-clock__layout--settings-open" : ""}`}
       >
