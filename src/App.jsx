@@ -29,7 +29,8 @@ const VIEW_META = {
   digital: {
     eyebrow: "LOCAL TIME, CLEARLY DISPLAYED",
     title: "Digital clock",
-    description: "A focused local-time display with the look that suits your space.",
+    description:
+      "A focused local-time display with the look that suits your space.",
     icon: Clock3,
   },
   flip: {
@@ -108,19 +109,20 @@ export default function App() {
   } = useAlarms();
 
   const dark = theme === "dark";
-  const minimalView = ["digital", "flip", "alarm", "timer", "stopwatch", "world"].includes(
-    activeView,
-  );
+  const minimalView = [
+    "digital",
+    "flip",
+    "alarm",
+    "timer",
+    "stopwatch",
+    "world",
+  ].includes(activeView);
   const meta = VIEW_META[activeView];
   const CurrentIcon = meta.icon;
 
   useEffect(() => {
     document.documentElement.style.colorScheme = dark ? "dark" : "light";
-
-    document.title =
-      activeView === "alarm"
-        ? "Online Clock — Alarm Clock, Timer, Stopwatch & World Clock"
-        : `${meta.title} — Online Clock`;
+    document.title = `${meta.title} | Online Clock`;
   }, [dark, activeView, meta.title]);
 
   useEffect(() => {
@@ -138,7 +140,9 @@ export default function App() {
 
   useEffect(() => {
     const syncViewWithLocation = () => {
-      setActiveView(window.location.pathname === "/flip-clock" ? "flip" : "alarm");
+      setActiveView(
+        window.location.pathname === "/flip-clock" ? "flip" : "alarm",
+      );
     };
 
     window.addEventListener("popstate", syncViewWithLocation);
@@ -214,7 +218,7 @@ export default function App() {
             ? setShowDigitalSettings((open) => !open)
             : activeView === "flip"
               ? setShowFlipSettings((open) => !open)
-            : setShowSettings(true)
+              : setShowSettings(true)
         }
       />
 
@@ -226,52 +230,62 @@ export default function App() {
           compact={minimalView}
         />
 
-        <main className={`app-view-content ${activeView === "digital" || activeView === "flip" ? "min-w-0 flex-1 px-3 pb-24 pt-3 sm:px-4 lg:px-5 lg:pb-5" : "min-w-0 flex-1 px-4 pb-24 pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pb-10"}`}>
-          <div className={activeView === "digital" || activeView === "flip" ? "mx-auto max-w-none" : "mx-auto max-w-315"}>
-            {!minimalView && <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-              <div>
-                {meta.eyebrow && (
-                  <p className="mb-2 text-[10px] font-bold tracking-[0.24em] text-amber-500">
-                    {meta.eyebrow}
+        <main
+          className={`app-view-content ${activeView === "digital" || activeView === "flip" ? "min-w-0 flex-1 px-3 pb-24 pt-3 sm:px-4 lg:px-5 lg:pb-5" : "min-w-0 flex-1 px-4 pb-24 pt-6 sm:px-6 sm:pt-8 lg:px-8 lg:pb-10"}`}
+        >
+          <div
+            className={
+              activeView === "digital" || activeView === "flip"
+                ? "mx-auto max-w-none"
+                : "mx-auto max-w-315"
+            }
+          >
+            {!minimalView && (
+              <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+                <div>
+                  {meta.eyebrow && (
+                    <p className="mb-2 text-[10px] font-bold tracking-[0.24em] text-amber-500">
+                      {meta.eyebrow}
+                    </p>
+                  )}
+
+                  <h1 className="flex items-center gap-3 text-2xl font-semibold tracking-tight sm:text-3xl">
+                    <span
+                      className={`flex h-10 w-10 items-center justify-center rounded-xl ${
+                        dark
+                          ? "bg-neutral-900 text-amber-400"
+                          : "bg-white text-amber-600 shadow-sm"
+                      }`}
+                    >
+                      <CurrentIcon size={21} />
+                    </span>
+
+                    {meta.title}
+                  </h1>
+
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-neutral-500">
+                    {meta.description}
                   </p>
-                )}
+                </div>
 
-                <h1 className="flex items-center gap-3 text-2xl font-semibold tracking-tight sm:text-3xl">
-                  <span
-                    className={`flex h-10 w-10 items-center justify-center rounded-xl ${
-                      dark
-                        ? "bg-neutral-900 text-amber-400"
-                        : "bg-white text-amber-600 shadow-sm"
-                    }`}
-                  >
-                    <CurrentIcon size={21} />
-                  </span>
-
-                  {meta.title}
-                </h1>
-
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-neutral-500">
-                  {meta.description}
-                </p>
+                <div
+                  className={`hidden items-center gap-2 rounded-full border px-3 py-2 text-xs sm:flex ${
+                    dark
+                      ? "border-neutral-800 bg-neutral-900/60 text-neutral-400"
+                      : "border-neutral-200 bg-white text-neutral-500"
+                  }`}
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  Live local time
+                  <span className="text-neutral-500">•</span>
+                  {now.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                  })}
+                </div>
               </div>
-
-              <div
-                className={`hidden items-center gap-2 rounded-full border px-3 py-2 text-xs sm:flex ${
-                  dark
-                    ? "border-neutral-800 bg-neutral-900/60 text-neutral-400"
-                    : "border-neutral-200 bg-white text-neutral-500"
-                }`}
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                Live local time
-                <span className="text-neutral-500">•</span>
-                {now.toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: true,
-                })}
-              </div>
-            </div>}
+            )}
 
             <div className={activeView === "alarm" ? "block" : "hidden"}>
               <AlarmClockView
@@ -316,40 +330,42 @@ export default function App() {
               <WorldClock now={now} theme={theme} use24Hour={use24Hour} />
             </div>
 
-            {!minimalView && <footer
-              className={`mt-8 flex flex-col gap-3 border-t pt-5 text-xs sm:flex-row sm:items-center sm:justify-between ${
-                dark
-                  ? "border-neutral-900 text-neutral-600"
-                  : "border-neutral-200 text-neutral-500"
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <Clock3 size={14} />
-                <span>© {new Date().getFullYear()} online-clock.com</span>
-                <span>·</span>
-                <span>Simple tools. Better timing.</span>
-              </div>
+            {!minimalView && (
+              <footer
+                className={`mt-8 flex flex-col gap-3 border-t pt-5 text-xs sm:flex-row sm:items-center sm:justify-between ${
+                  dark
+                    ? "border-neutral-900 text-neutral-600"
+                    : "border-neutral-200 text-neutral-500"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Clock3 size={14} />
+                  <span>© {new Date().getFullYear()} online-clock.com</span>
+                  <span>·</span>
+                  <span>Simple tools. Better timing.</span>
+                </div>
 
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                {VIEWS.map((view) => (
-                  <button
-                    key={view.id}
-                    type="button"
-                    onClick={() => handleViewChange(view.id)}
-                    className="transition hover:text-amber-500"
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                  {VIEWS.map((view) => (
+                    <button
+                      key={view.id}
+                      type="button"
+                      onClick={() => handleViewChange(view.id)}
+                      className="transition hover:text-amber-500"
+                    >
+                      {view.label}
+                    </button>
+                  ))}
+
+                  <a
+                    href="https://online-clock.com"
+                    className="inline-flex items-center gap-1 transition hover:text-amber-500"
                   >
-                    {view.label}
-                  </button>
-                ))}
-
-                <a
-                  href="https://online-clock.com"
-                  className="inline-flex items-center gap-1 transition hover:text-amber-500"
-                >
-                  Website <ArrowUpRight size={12} />
-                </a>
-              </div>
-            </footer>}
+                    Website <ArrowUpRight size={12} />
+                  </a>
+                </div>
+              </footer>
+            )}
           </div>
         </main>
       </div>

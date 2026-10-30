@@ -405,11 +405,13 @@ export default function FlipClockPage({ settingsOpen, onSettingsOpenChange }) {
     };
   }, []);
 
-  const updateSettings = (changes) =>
+  const updateSettings = (changes) => {
     setStoredSettings((current) => ({
       ...normaliseSettings(current),
       ...changes,
     }));
+    onSettingsOpenChange(false);
+  };
   const toggleFullscreen = async () => {
     try {
       if (document.fullscreenElement) await document.exitFullscreen();

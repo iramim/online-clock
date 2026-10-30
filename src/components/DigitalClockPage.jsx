@@ -337,6 +337,7 @@ export default function DigitalClockPage({
 
   const updateSettings = (changes) => {
     setStoredSettings((current) => ({ ...safeSettings(current), ...changes }));
+    onSettingsOpenChange(false);
   };
 
   const toggleFullscreen = async () => {
