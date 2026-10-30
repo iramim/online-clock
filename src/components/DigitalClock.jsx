@@ -127,7 +127,7 @@ export default function DigitalClock({
   return (
     <section
       ref={panelRef}
-      className={`digital-clock-panel relative overflow-hidden border px-4 py-10 text-center sm:px-8 sm:py-12 ${
+      className={`digital-clock-panel relative overflow-hidden border px-4 py-14 text-center sm:px-8 sm:py-12 ${
         dark
           ? "border-neutral-800 bg-black"
           : "border-neutral-200 bg-neutral-950 text-white"
@@ -172,7 +172,7 @@ export default function DigitalClock({
 
       <div className="digital-clock-content relative z-1">
         <div
-          className={`${digitalFont ? "clock-digit" : "font-sans"} flex min-h-28 items-baseline justify-center gap-1.5 py-3 sm:min-h-36 sm:gap-3`}
+          className={`${digitalFont ? "clock-digit" : "font-sans"} mt-8 flex min-h-28 items-baseline justify-center gap-1.5 py-3 sm:mt-4 sm:min-h-36 sm:gap-3`}
           style={{
             fontSize: `clamp(${2.65 * fontScale}rem, ${7.3 * fontScale}vw, ${6.2 * fontScale}rem)`,
           }}

@@ -71,6 +71,5 @@ export function getSuggestedAlarmTime() {
   now.setSeconds(0, 0);
   const roundedMinutes = Math.ceil((now.getMinutes() + 1) / 5) * 5;
   now.setMinutes(roundedMinutes);
-
   return `${pad(now.getHours())}:${pad(now.getMinutes())}`;
 }
